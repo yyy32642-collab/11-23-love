@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101326">
+<title>11.23 · 想对你说的话</title>
+<style>
+:root{--cream:#f7eee8;--muted:#c9b9c4;--pink:#f1b8c9;--gold:#e9d3b0}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#101326;color:var(--cream);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+body{overflow:hidden;background:radial-gradient(ellipse at 50% 80%,#33243e 0%,#1b1d35 40%,#0c1020 100%)}
+#stars{position:fixed;inset:0;pointer-events:none;opacity:.8}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px #fff8;animation:twinkle 3s infinite ease-in-out}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.4)}}
+.glow{position:fixed;width:65vw;height:65vw;max-width:700px;max-height:700px;left:50%;top:55%;transform:translate(-50%,-50%);background:radial-gradient(circle,#c27b9a20 0%,#9d6b9920 25%,transparent 68%);pointer-events:none}
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:22px 24px;color:#e9d9dfb8;font-size:12px;letter-spacing:2px}
+.controls{display:flex;gap:9px}
+button{border:1px solid #ffffff35;background:#ffffff0d;color:#f8eaf0;border-radius:30px;padding:9px 14px;font-size:12px;letter-spacing:1px;backdrop-filter:blur(12px);cursor:pointer}
+button:hover{background:#ffffff20}
+#stage{position:relative;height:100svh;overflow:hidden;display:flex;justify-content:center}
+#scroll{position:absolute;top:100%;width:min(720px,calc(100% - 44px));padding:0 0 40vh;text-align:center;will-change:transform}
+.kicker{font-size:11px;letter-spacing:5px;color:var(--gold);margin-bottom:24px}
+h1{font-weight:300;font-size:clamp(30px,6vw,48px);letter-spacing:5px;line-height:1.5;margin:0 0 14px;text-shadow:0 0 28px #e6a9c766}
+.subtitle{font-size:12px;letter-spacing:3px;color:#d7bdc9;margin-bottom:85px}
+.paragraph{font-size:clamp(16px,2.4vw,19px);font-weight:300;line-height:2.35;letter-spacing:1.2px;color:#f4e9e9;margin:0 auto 66px;white-space:pre-line;text-shadow:0 2px 18px #0008}
+.end{margin:100px 0 20px;color:#f3c8d6;font-size:22px;letter-spacing:3px;line-height:2}
+.signature{font-size:12px;letter-spacing:4px;color:#d9b9c8;margin-top:28px}
+.progress{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,#b97b9a,#f0c9d6);width:0;z-index:8;box-shadow:0 0 10px #f0c9d6}
+.hint{position:fixed;bottom:24px;left:0;right:0;text-align:center;color:#d7c3cc80;font-size:11px;letter-spacing:2px;z-index:4;transition:opacity 1s}
+.cover{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at center,#33283d 0%,#101326 70%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:28px;transition:opacity 1.2s,visibility 1.2s}
+.cover.hide{opacity:0;visibility:hidden}
+.cover .date{color:var(--gold);font-size:11px;letter-spacing:6px;margin-bottom:25px}
+.cover h2{font-weight:300;font-size:clamp(28px,7vw,44px);letter-spacing:5px;margin:0 0 18px}
+.cover p{color:#d9c8d0;font-size:13px;letter-spacing:2px;line-height:2}
+.cover button{margin-top:30px;padding:13px 30px;border-color:#e8bdcd80;font-size:13px}
+.note{position:fixed;bottom:12px;right:18px;font-size:10px;color:#ffffff45;z-index:5}
+@media(max-width:600px){.top{padding:17px 15px}.top .brand{font-size:10px}button{padding:8px 11px}.paragraph{line-height:2.2;margin-bottom:56px}}
+</style>
+</head>
+<body>
+<div id="stars"></div><div class="glow"></div>
+<div class="top"><div class="brand">A LITTLE NOTE · 11.23</div><div class="controls"><button id="musicBtn">♫ 音乐：开</button><button id="pauseBtn">Ⅱ 暂停</button></div></div>
+<div id="stage"><main id="scroll">
+  <div class="kicker">FOR YOU, ONLY YOU</div>
+  <h1>11.23 想对你说的话</h1>
+  <div class="subtitle">一些认真写下来的恋爱日常</div>
+  <section id="copy"></section>
+  <div class="end">第 16 天。<br>以后也请多多指教。♡</div>
+  <div class="signature">TO MY FAVORITE PERSON</div>
+</main></div>
+<div class="hint" id="hint">把心事交给时间，慢慢读给你听</div><div class="progress" id="progress"></div>
+<div class="cover" id="cover">
+  <div class="date">NOVEMBER 23</div>
+  <h2>想对你说的话</h2>
+  <p>有些话，想慢慢说给你听。<br>建议戴上耳机，开始这段小小的旅程。</p>
+  <button id="start">打开这封信　♡</button>
+</div>
+<audio id="music" loop preload="none">
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/25/audio_946b6f1c4b.mp3?filename=romantic-piano-124689.mp3" type="audio/mpeg">
+</audio>
+<script>
+const paragraphs = [
+`这段很长的文字是我一个字一字敲出来的哦，我只是想认认真真记录一下我心里想说的话，没有生气的意思哦，更绝对没有要分手的意思哦，你千万别多想，这只是一次很正常的记录。因为看到之前高中同学开始开小号记录一下自己想说的话，感觉写得怪不赖呢，所以我也想记录一下，就以我们的恋爱日常写起吧。（maybe这可能是唯一一次？谁知道我这个人的“循环热度”）`,
+`自从我们见面第二次那天晚上回来我就有点心情不太好，可能是因为在一起呆得时间太短有点不舍？还可能是因为我没有妥善安排这两天的行程或者是我又惹你生气了。`,
+`你是一个内向的人，总是会不自觉的尴尬和难堪，而我貌似与你恰恰相反，我之前虽然也是一个很容易难堪的人，但是跟你在一起，做什么事都不会觉得难堪，我喜欢记录你，因为你的一颦一笑都牵动着我的心弦，我想永远留住这种时刻，所以我有这个信心让你爱上我这样记录你的呦！`,
+`你也是一个很体贴的人，每次去饭店吃饭，你对服务员的态度真的是很好的！这对我来说很少见，因为我身边很少有这样的人呢。或许是因为有两段当服务员的经历，所以对他们感同身受吧，所以你的素质真的很高呀。`,
+`今天你说我们两个都是回避型人格，生气睡一觉就过去了，就这么凑活着过吧，我一开始看到你这么说，确实是有点疑惑，觉得为什么说是凑活着呢，但是仔细想想也是的，有时平淡才是真。这么多天我确实看得出来你为我改变了许多，好像……你也不总是像之前那么爱发脾气了，当然不是说发脾气不好，你发脾气其实也都是因为我的不是吗。`,
+`我们似乎都在彼此影响着对方，最起码我自己感觉我变得对待人更有耐心了，不知道在你眼里我有哪些改变呢？plus你今早说我记录你的那个原相机我真的觉得很好看！！！`,
+`我已经下定决心改掉我这个超级无敌说话难听的嘴巴了，不管是跟你在一起讲话，还是跟我身边的朋友讲话，但是又想也许我本身就是一个很刻薄的人？（依旧互搏）那我就改掉我这个刻薄的性格吧，我也想变成一个很好的人呀。`,
+`今天是我们在一起的第16天呦，谈恋爱倒没有什么21天成习惯这么一说吧，但是确实感觉会趋于平淡，但是偶尔收到这么一条短信还是会很惊喜的吧 嘻嘻嘻😘`
+];
+const copy=document.getElementById('copy');
+paragraphs.forEach(t=>{const p=document.createElement('p');p.className='paragraph';p.textContent=t;copy.appendChild(p)});
+const stars=document.getElementById('stars');
+for(let i=0;i<95;i++){const s=document.createElement('i');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=(Math.random()*4)+'s';s.style.opacity=Math.random();stars.appendChild(s)}
+const scroll=document.getElementById('scroll'), cover=document.getElementById('cover'), music=document.getElementById('music');
+let started=false,paused=false,musicOn=true,position=0,last=0,raf=0;
+const speed=17; // pixels per second
+function frame(ts){if(!started)return;if(!last)last=ts;const dt=Math.min((ts-last)/1000,.05);last=ts;if(!paused)position+=speed*dt;scroll.style.transform=`translateY(${-position}px)`;const total=scroll.offsetHeight+innerHeight;document.getElementById('progress').style.width=Math.min(100,position/total*100)+'%';if(position<total)raf=requestAnimationFrame(frame);else{document.getElementById('hint').textContent='愿每一个平凡的日子，都有你在身边。♡';document.getElementById('hint').style.opacity=1}}
+function begin(){if(started)return;started=true;cover.classList.add('hide');music.play().catch(()=>{musicOn=false;document.getElementById('musicBtn').textContent='♫ 音乐：关'});raf=requestAnimationFrame(frame);setTimeout(()=>document.getElementById('hint').style.opacity=0,5000)}
+document.getElementById('start').addEventListener('click',begin);
+document.getElementById('pauseBtn').addEventListener('click',()=>{if(!started)return;paused=!paused;document.getElementById('pauseBtn').textContent=paused?'▶ 继续':'Ⅱ 暂停';if(!paused){last=0;raf=requestAnimationFrame(frame)}});
+document.getElementById('musicBtn').addEventListener('click',()=>{musicOn=!musicOn;if(musicOn){music.play().catch(()=>{});document.getElementById('musicBtn').textContent='♫ 音乐：开'}else{music.pause();document.getElementById('musicBtn').textContent='♫ 音乐：关'}});
+</script>
+</body></html>
